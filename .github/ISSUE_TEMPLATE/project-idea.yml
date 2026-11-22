@@ -1,5 +1,67 @@
-name: Project idea
-description: Propose the team's product idea with a first scale estimate (Class 1 homework).
+name:Dengue Triage & Hospital Referral Portal (A Clinical Decision-Support & Routing
+System)
+description: Dengue Triage & Hospital Referral Portal (A Clinical Decision-Support & Routing System)
+1. Core System (How and Why It Works)
+Why It Is Needed (Problem): During dengue season, rural or everyday patients often do not recognize early warning signs (such as abdominal pain or vomiting), or they waste valuable time going to the wrong hospital without knowing which facilities have dengue beds or platelet support. In addition, patients frequently do not have complete lab reports (such as CBC/Platelet counts).
+
+How It Works (Workflow):
+
+A patient or Community Health Worker (CHW) inputs ongoing symptoms, day of fever, and (if available) platelet count or vitals into the portal.
+
+The backend's Dynamic Clinical Rule Engine adjusts for missing information and determines the patient's risk level (Low, Moderate, or Critical).
+
+If the risk is Critical or any warning sign is present, the system automatically generates a Unique Referral Ticket and uses the OSRM API to show the driving distance and route from the patient's current location to the nearest dengue-capable hospitals.
+
+A pre-arrival triage summary reaches the target hospital's dashboard in advance so the staff can prepare before the patient arrives.
+
+2. User Roles & Responsibilities
+Patient / Community Health Worker (CHW):
+
+Input personal or patient symptoms, day of fever, and optional lab reports to get an immediate triage assessment.
+
+View past triage history and, if Critical, receive a referral ticket (QR/ID) along with a route map to nearby hospitals.
+
+Hospital Desk / Triage Doctor:
+
+View incoming referral tickets for their hospital in real time.
+
+Verify tickets upon patient arrival and update status (Admitted, Under Observation, Discharged).
+
+Keep real-time availability status updated for dengue beds and platelets.
+
+System Admin:
+
+Onboard and verify new hospitals.
+
+Configure clinical scoring weights and platelet thresholds.
+
+Monitor area-wise dengue triage and referral analytics dashboards.
+
+3. Business Logic (Model-Free Backend Rule Engine)
+Without relying on heavy ML models, the backend runs a 3-tier logic based on WHO and DGHS clinical guidelines:
+
+Tier 1 — Deterministic Red-Flag Guardrails (Hard Rules):
+
+Regardless of the calculated score, if the patient's input shows platelet count less than 50,000/µL, or Bleeding, Persistent Vomiting, Fainting/Loss of Consciousness, or Low BP is marked "Yes", the system immediately flags the case as CRITICAL RED-FLAG.
+
+Tier 2 — Missing-Data Aware Weighted Scoring:
+
+Each symptom carries a specific weight (e.g., severe abdominal pain = 30, fever for 4+ days = 15, age under 5 or over 60 = 10).
+
+If a patient has not taken lab tests (such as Hematocrit or Platelet count) and leaves those fields blank, the backend excludes the maximum points of those missing fields and calculates a percentage (%) risk score relative only to the fields provided.
+
+Tier 3 — Automated Triage Tiering & Ticket Locking:
+
+Score less than 30% → Low Risk (home care guidelines).
+
+Score 30% – 69% → Moderate Risk (advised to get a CBC test at a nearby diagnostic center).
+
+Score 70% or higher or Red-Flag → Critical Risk → creates an entry in the referrals database table, generates a unique referral card, and sends an alert to nearby available hospitals.
+
+4. External APIs (Free & Open-Source Integration)
+OpenStreetMap (Nominatim) & OSRM Routing API (completely free; no credit card or API key required):
+
+From the patient's address or GPS coordinates, calculates actual road Driving Distance and Estimated Time of Arrival (ETA) to verified hospitals in the database to suggest the top 3 nearest hospitals.
 title: "[Idea] "
 labels: ["proposal"]
 assignees: ["Lazyb0y"]
