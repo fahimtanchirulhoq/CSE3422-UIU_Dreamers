@@ -1,6 +1,5 @@
-name:
-description: 
-
+name: Project Idea
+description: Submit your team's project idea for CSE3422 review and approval
 title: "[Idea] "
 labels: ["proposal"]
 assignees: ["Lazyb0y"]
@@ -10,12 +9,15 @@ body:
       value: |
         One issue per team. The instructor approves the idea or asks for changes in the comments.
         Rules: an MVP of 5 to 8 user stories, at least 2 user roles, at least 5 related entities, at least 2 business rules with real logic, and at least 1 external API.
+
   - type: input
     id: name
     attributes:
       label: Product name
+      value: "Dengue Triage & Hospital Referral Portal"
     validations:
       required: true
+
   - type: dropdown
     id: source
     attributes:
@@ -25,49 +27,80 @@ body:
         - "A suggested course idea (name it below)"
     validations:
       required: true
+
   - type: input
     id: suggested
     attributes:
       label: Which suggested idea?
       description: Only if you chose a suggested course idea. Its number and name from the project handout.
       placeholder: "P1 Campus Lost & Found"
+
   - type: textarea
     id: problem
     attributes:
       label: Problem
       description: Who has the problem, how they cope today, and why that is not good enough.
+      value: |
+        During dengue season, rural or everyday patients often do not recognize early warning signs (such as abdominal pain or vomiting), or they waste valuable time going to the wrong hospital without knowing which facilities have dengue beds or platelet support. In addition, patients frequently do not have complete lab reports (such as CBC/Platelet counts).
     validations:
       required: true
+
   - type: textarea
     id: roles
     attributes:
       label: Users and roles (at least 2)
-      placeholder: |
-        - Student: posts and searches lost items
-        - Moderator: approves posts and resolves claims
+      value: |
+        - Patient / Community Health Worker (CHW): Input personal or patient symptoms, day of fever, and optional lab reports to get an immediate triage assessment; view past triage history and, if Critical, receive a referral ticket (QR/ID) along with a route map to nearby hospitals.
+        - Hospital Desk / Triage Doctor: View incoming referral tickets in real time, verify tickets upon arrival, update patient status (Admitted, Under Observation, Discharged), and keep dengue bed and platelet availability updated.
+        - System Admin: Onboard and verify new hospitals, configure clinical scoring weights and platelet thresholds, and monitor area-wise dengue triage and referral analytics dashboards.
     validations:
       required: true
+
   - type: textarea
     id: stories
     attributes:
       label: MVP stories (5 to 8, one line each)
-      placeholder: "As a student, I want to ..., so that ..."
+      value: |
+        As a Patient or CHW, I want to submit symptoms, day of fever, and optional lab results, so that I receive an immediate dengue risk tier (Low, Moderate, or Critical).
+        As a Patient or CHW, I want to receive a unique referral ticket (QR/ID) and route map to the 3 nearest dengue-capable hospitals when critical, so that I avoid going to an unequipped facility.
+        As a Patient or CHW, I want to view my past triage assessments, so that I can track symptom progression over time.
+        As a Hospital Desk staff or Triage Doctor, I want to view incoming referral tickets with pre-arrival triage summaries in real time, so that our team can prepare before the patient arrives.
+        As a Hospital Desk staff or Triage Doctor, I want to verify a patient's referral ticket and update their status (Admitted, Under Observation, Discharged), so that referral tracking stays accurate.
+        As a Hospital Desk staff or Triage Doctor, I want to update available dengue beds and platelet stock in real time, so that critical patients are only routed to facilities with capacity.
+        As a System Admin, I want to onboard and verify hospitals and configure clinical scoring weights and platelet thresholds, so that routing and triage guidelines stay accurate.
     validations:
       required: true
+
   - type: textarea
     id: rules
     attributes:
       label: Business rules (at least 2) and main entities (at least 5)
       description: Rules that need real, testable logic, such as capacity limits, time windows, prices or approvals.
+      value: |
+        Business Rules (3-Tier Model-Free Clinical Rule Engine):
+        1. Deterministic Red-Flag Guardrails (Hard Rules): Regardless of the score, if Platelet < 50,000/uL, or Bleeding, Persistent Vomiting, Fainting/Loss of Consciousness, or Low BP is marked "Yes", the system immediately flags the case as CRITICAL RED-FLAG.
+        2. Missing-Data Aware Weighted Scoring: Each symptom has a weight (e.g., severe abdominal pain = 30, fever 4+ days = 15, age < 5 or > 60 = 10). If lab fields (Hematocrit or Platelet) are left blank, the backend excludes those fields' max points and calculates a percentage (%) risk score relative only to provided inputs.
+        3. Automated Triage Tiering & Ticket Locking: Score < 30% -> Low Risk (home care); 30%-69% -> Moderate Risk (advised CBC test); >= 70% or Red-Flag -> Critical Risk (creates a referral entry, generates a unique referral card, and alerts the nearest available hospitals).
+
+        Main Entities:
+        - User (Patient, CHW, Hospital Staff, System Admin)
+        - TriageAssessment
+        - ReferralTicket
+        - Hospital
+        - HospitalCapacity (dengue beds & platelet availability)
+        - ClinicalRuleConfig (scoring weights & thresholds)
     validations:
       required: true
+
   - type: input
     id: api
     attributes:
       label: External API and what the product uses it for
       description: Check that a free or sandbox tier exists.
+      value: "OpenStreetMap (Nominatim) & OSRM Routing API (free, no API key) — converts patient addresses/GPS into driving distance and ETA to verified hospitals to suggest the top 3 nearest facilities."
     validations:
       required: true
+
   - type: textarea
     id: estimate
     attributes:
@@ -81,6 +114,7 @@ body:
         - What these numbers mean for our design:
     validations:
       required: true
+
   - type: textarea
     id: risks
     attributes:
