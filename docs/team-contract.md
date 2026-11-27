@@ -10,7 +10,7 @@ Every member writes code. Roles say who leads an area, not who does all of it.
 |---|---|---|---|---|
 |Md.Thansirul Hoque Fahim  | @ | Team lead / Scrum master | | |
 | Md.Thansirul Hoque Fahim | @ | Backend lead | | |
-|Md. Sayebur Rahman tasin | @ | Frontend lead | | |
+|Md. Sayebur Rahman Tasin | @ | Frontend lead | | |
 | Md. Shahriar Parvez | @ | Quality and DevOps lead | | |
 
 ## Communication
